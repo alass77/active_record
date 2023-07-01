@@ -3,16 +3,16 @@ class ExercisesController < ApplicationController
     # 【要件】注文されていないすべての料理を返すこと
     #   * left_outer_joinsを使うこと
     @foods = Food
-    .left_outer_joins(:orders_food)
-    .distinct.where(orders_food: (id: nil))
+      .left_outer_joins(:order_foods)
+      .distinct.where(order_foods: {id: nil} )
   end
 
   def exercise2
     # 【要件】注文されていない料理を提供しているすべてのお店を返すこと
     #   * left_outer_joinsを使うこと
     @shops = Shop
-    .left_outer_joins(foods: :orders_foodfoods)
-    .distinct.where(foods: [orders_food: (id: nil)])
+      .left_outer_joins(foods: :order_foods)
+      .distinct.where(foods: {order_foods: {id: nil} } )
   end
 
   def exercise3 
@@ -32,7 +32,7 @@ class ExercisesController < ApplicationController
     #   * joinsを使うこと
     #   * 取得したCustomerのインスタンスにfoods_price_sumと呼びかけると合計金額を返すこと
     @customer = Customer
-    joins(orders: :foods)
+      .joins(orders: :foods)
       .select("customers.*, SUM(foods.price) AS foods_price_sum")
       .group("customers.id")
       .order("foods_price_sum DESC")
